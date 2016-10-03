@@ -1,59 +1,102 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
 
-  <title>Angular Material - Starter App</title>
-  <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-  <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@master/angular-material.css"/>
-  <link rel="stylesheet" href="./assets/app.css"/>
+    <title>Angular Material - Starter App</title>
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+    <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@master/angular-material.css"/>
+    <link rel="stylesheet" href="./assets/app.css"/>
 </head>
 
-<body ng-cloak layout="column" ng-controller="AppController as app">
+<body id="body" ng-cloak layout="column" ng-controller="AppController as app">
 
-  <!-- Container #1 (see wireframe) -->
-  <md-toolbar layout="row" class="md-toolbar-tools">
-    <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()"
-               aria-label="Show User List">
-      <md-icon md-svg-icon="menu"></md-icon>
-    </md-button>
-    <h1>Angular Material - Starter App</h1>
-  </md-toolbar>
+<!-- Container #1 (see wireframe) -->
+<md-toolbar layout="row" class="md-toolbar-tools">
+    <h1>SafetyApp</h1>
 
-  <!-- Container #2 -->
-  <div flex layout="row">
+    <md-menu md-position-mode="target-right target">
+        <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <md-icon md-svg-icon="menu"></md-icon>
+        </md-button>
+        <md-menu-content width="6">
+            <md-menu-item ng-repeat="item in [1, 2, 3]">
+                <md-button ng-click="ctrl.announceClick($index)">
+                    <md-icon md-menu-align-target="" md-svg-icon="call:no-sim"></md-icon>
+                    Option {{item}}
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
 
-    <!-- Container #3 -->
-    <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
-                md-component-id="left" ng-click="app.toggleList()">
-      <!-- Custom UsersList component -->
-      <users-list
-          users="app.users"
-          selected="app.selected"
-          on-selected="app.selectUser(user)">
-      </users-list>
-    </md-sidenav>
+</md-toolbar>
 
-    <!-- Container #4 -->
-    <md-content flex id="content">
-      <!-- Custom UserDetails component -->
-      <user-details
-          selected="app.selected" >
-      </user-details>
-    </md-content>
+<!-- Container #2 -->
+<div flex ng-cloak="" class="tabsdemoDynamicHeight">
+    <md-tabs class="stretchHeight" md-swipe-content="true">
+        <md-tab label="Log in">
+            <md-content class="md-padding">
+                <div class="loginBox">
+                    <md-toolbar>
+                        <h2 class="md-toolbar-tools"><span>Login</span></h2>
+                    </md-toolbar>
+                    <md-content layout="column" class="md-padding">
+                        <md-input-container>
+                            <label>EmailAddress</label>
+                            <input type="email" ng-model="username"/>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Password</label>
+                            <input type="password" ng-model="password"/>
+                        </md-input-container>
+                        <div layout="row" layout-align="center center" style="padding-top:20px;">
+                            <md-button class="md-raised md-primary">Login</md-button>
+                            <div flex="flex"></div>
+                            <md-button href="" md-no-ink="md-no-ink">Forgot Password</md-button>
+                        </div>
+                    </md-content>
+                </div>
+            </md-content>
+        </md-tab>
+        <md-tab label="two">
+            <md-content class="md-padding">
+                <div class="container">
+                    <h1>Camera API</h1>
+                    <p>
+                        <input type="file" id="take-picture" accept="image/*" ng-model="app.picData"
+                               fileread="app.picData" onchange="angular.element(this).controller().changePic(event)"
+                               >
 
-  </div>
 
-  <script src="./jspm_packages/system.js" type="text/javascript"></script>
-  <script src="config.js" type="text/javascript"></script>
-  <script type="text/javascript">
+                    </p>
+                    <tt>debug = {{app.picData}}</tt>
+                    <tt>debug = {{app.pictureURI}}</tt>
+                    <br/>
+                    <h2>Preview:</h2>
+                    <p>
+                        <img ng-src={{app.pictureURI}} alt="" id="show-picture">
+                    </p>
+
+                    <p id="error"></p>
+
+                </div>
+
+            </md-content>
+        </md-tab>
+    </md-tabs>
+
+</div>
+
+<script src="./jspm_packages/system.js" type="text/javascript"></script>
+<script src="config.js" type="text/javascript"></script>
+<script type="text/javascript">
     System
-        .import('src/boot/boot')
-        .catch( console.error.bind(console) ); // make sure any errors print to console
-  </script>
+            .import('src/boot/boot')
+            .catch(console.error.bind(console)); // make sure any errors print to console
+</script>
 
 </body>
 </html>
