@@ -62,28 +62,19 @@
             </md-content>
         </md-tab>
         <md-tab label="two">
-            <md-content class="md-padding">
-                <div class="container">
-                    <h1>Camera API</h1>
-                    <p>
+            <md-content class="md-padding" layout="column" layout-align="center center" md-no-momentum>
+                    <h2>Take shot</h2>
+                    <div class="cameraButton">
                         <input type="file" id="take-picture" accept="image/*" ng-model="app.picData"
-                               fileread="app.picData" onchange="angular.element(this).controller().changePic(event)"
-                               >
+                               fileread="app.picData" onchange="angular.element(this).controller().changePic(event)">
+                    </div>
 
-
-                    </p>
-                    <tt>debug = {{app.picData}}</tt>
-                    <tt>debug = {{app.pictureURI}}</tt>
-                    <br/>
                     <h2>Preview:</h2>
-                    <p>
-                        <img ng-src={{app.pictureURI}} alt="" id="show-picture">
-                    </p>
+                    <div class='fill-screen'>
+                        <img class='make-it-fit' ng-src={{app.pictureURI}} alt="" id="show-picture">
+                    </div>
 
                     <p id="error"></p>
-
-                </div>
-
             </md-content>
         </md-tab>
     </md-tabs>

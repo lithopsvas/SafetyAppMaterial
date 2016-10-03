@@ -141,21 +141,28 @@ span.name {
     border: 1px solid #e1e1e1;
 }
 
-.tabsdemoDynamicHeight md-content md-tabs md-tabs-wrapper {
-    background: white;
-    display: none;
-}
+
 
 .tabsdemoDynamicHeight md-content h1:first-child {
     margin-top: 0;
 }
 
+/*hiding tabs*/
+.tabsdemoDynamicHeight md-tabs-wrapper {
+    display: none;
+}
+
+.tabsdemoDynamicHeight md-tabs-content-wrapper {
+    top: 0;
+}
+
+/*end of hiding tabs*/
 /*login form*/
-.loginBox {
+.loginBox, .container {
     width: 100%
 }
 
-.stretchHeight{
+.stretchHeight {
     height: 100%;
 }
 
@@ -164,3 +171,30 @@ span.name {
 }
 
 /*end of login form*/
+
+/*camera*/
+div.fill-screen {
+
+    text-align: center;
+}
+
+img.make-it-fit {
+    max-width: 99%;
+    max-height: 99%;
+    border-radius: 5%;
+}
+
+div.cameraButton {
+    background: url(./svg/photo-camera.svg) no-repeat;
+}
+
+div.cameraButton input {
+    cursor: pointer;
+
+    width: 100px;
+    height: 100px;
+    border: none;
+    opacity: 0;
+}
+
+/*end of camera*/
