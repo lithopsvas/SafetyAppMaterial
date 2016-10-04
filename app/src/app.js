@@ -18,6 +18,8 @@ export default angular.module('SafetyApp', ['ngMaterial', Users.name])
             .icon("google_plus", "./assets/svg/google_plus.svg", 24)
             .icon("hangouts", "./assets/svg/hangouts.svg", 24)
             .icon("twitter", "./assets/svg/twitter.svg", 24)
+            .icon("login", "./assets/svg/log-in.svg", 24)
+            .icon("report", "./assets/svg/reporting.svg", 24)
             .icon("phone", "./assets/svg/phone.svg", 24);
 
         $mdThemingProvider.theme('default')
@@ -51,4 +53,39 @@ export default angular.module('SafetyApp', ['ngMaterial', Users.name])
                 element.bind('change', onChangeHandler);
             }
         };
-    });
+    })
+    .config(function($mdThemingProvider) {
+
+        // Configure a dark theme with primary foreground yellow
+
+        $mdThemingProvider.theme('docs-dark', 'default')
+            .primaryPalette('yellow')
+            .dark();
+
+    })
+    .factory('gpsService', ['$q', '$window', function ($q, $window) {
+
+        'use strict';
+
+        function getCurrentPosition() {
+            var deferred = $q.defer();
+
+            if (!$window.navigator.geolocation) {
+                deferred.reject('Geolocation not supported.');
+            } else {
+                $window.navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        deferred.resolve(position);
+                    },
+                    function (err) {
+                        deferred.reject(err);
+                    });
+            }
+
+            return deferred.promise;
+        }
+
+        return {
+            getCurrentPosition: getCurrentPosition
+        };
+    }]);

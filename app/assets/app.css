@@ -166,7 +166,7 @@ span.name {
     height: 100%;
 }
 
-.stretch input {
+.stretch {
     width: 100%
 }
 
@@ -197,4 +197,9 @@ div.cameraButton input {
     opacity: 0;
 }
 
-/*end of camera*/
+/*button*/
+.mdbutton{
+    font-size: 14px;
+}
+/*end of: button*/
+

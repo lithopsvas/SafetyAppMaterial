@@ -5,8 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="mobile-web-app-capable" content="yes">
 
-    <title>Angular Material - Starter App</title>
+    <title>Safety App</title>
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
     <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@master/angular-material.css"/>
     <link rel="stylesheet" href="./assets/app.css"/>
@@ -15,7 +16,7 @@
 <body id="body" ng-cloak layout="column" ng-controller="AppController as app">
 
 <!-- Container #1 (see wireframe) -->
-<md-toolbar layout="row" class="md-toolbar-tools">
+<md-toolbar layout="row" class="md-toolbar-tools" md-swipe-left="app.reqFullscreen()">
     <h1>SafetyApp</h1>
 
     <md-menu md-position-mode="target-right target">
@@ -23,10 +24,15 @@
             <md-icon md-svg-icon="menu"></md-icon>
         </md-button>
         <md-menu-content width="6">
-            <md-menu-item ng-repeat="item in [1, 2, 3]">
-                <md-button ng-click="ctrl.announceClick($index)">
-                    <md-icon md-menu-align-target="" md-svg-icon="call:no-sim"></md-icon>
-                    Option {{item}}
+            <md-menu-item >
+                <md-button ng-click="app.selectedIndex=0">
+                    <md-icon md-menu-align-target="" md-svg-icon="login"></md-icon>
+                    Log in
+                </md-button>
+            </md-menu-item><md-menu-item >
+                <md-button ng-click="app.selectedIndex=1">
+                    <md-icon md-menu-align-target="" md-svg-icon="report"></md-icon>
+                    Report
                 </md-button>
             </md-menu-item>
         </md-menu-content>
@@ -36,7 +42,7 @@
 
 <!-- Container #2 -->
 <div flex ng-cloak="" class="tabsdemoDynamicHeight">
-    <md-tabs class="stretchHeight" md-swipe-content="true">
+    <md-tabs class="stretchHeight" md-swipe-content="true" md-selected="app.selectedIndex">
         <md-tab label="Log in">
             <md-content class="md-padding">
                 <div class="loginBox">
@@ -45,15 +51,15 @@
                     </md-toolbar>
                     <md-content layout="column" class="md-padding">
                         <md-input-container>
-                            <label>EmailAddress</label>
-                            <input type="email" ng-model="username"/>
+                            <label>Username</label>
+                            <input type="username" ng-model="username"/>
                         </md-input-container>
                         <md-input-container>
                             <label>Password</label>
                             <input type="password" ng-model="password"/>
                         </md-input-container>
                         <div layout="row" layout-align="center center" style="padding-top:20px;">
-                            <md-button class="md-raised md-primary">Login</md-button>
+                            <md-button class="md-raised md-primary" ng-disabled="!password||!username" ng-click="app.selectedIndex=1">Login</md-button>
                             <div flex="flex"></div>
                             <md-button href="" md-no-ink="md-no-ink">Forgot Password</md-button>
                         </div>
@@ -61,21 +67,147 @@
                 </div>
             </md-content>
         </md-tab>
-        <md-tab label="two">
-            <md-content class="md-padding" layout="column" layout-align="center center" md-no-momentum>
-                    <h2>Take shot</h2>
-                    <div class="cameraButton">
-                        <input type="file" id="take-picture" accept="image/*" ng-model="app.picData"
-                               fileread="app.picData" onchange="angular.element(this).controller().changePic(event)">
-                    </div>
-
-                    <h2>Preview:</h2>
-                    <div class='fill-screen'>
-                        <img class='make-it-fit' ng-src={{app.pictureURI}} alt="" id="show-picture">
-                    </div>
-
-                    <p id="error"></p>
+        <md-tab label="EnterData">
+            <md-content class="md-padding" layout="row">
+                <div flex="30" layout="row">
+                    <md-button class="mdbutton" md-no-ink ng-click="app.selectedIndex=0">
+                        <md-icon md-svg-src="./assets/svg/back.svg"></md-icon>
+                        Log in
+                    </md-button>
+                </div>
+                <div flex="40" layout="row" layout-align="center center"><h2>New report</h2></div>
+                <div flex="30"></div>
             </md-content>
+
+            <md-content class="md-padding" layout="column" layout-align="center center" md-no-momentum>
+                <h3>Take photo:</h3>
+                <div class="cameraButton">
+                    <input type="file" id="take-picture" accept="image/*" ng-model="app.picData"
+                           fileread="app.picData" onchange="angular.element(this).controller().changePic(event)">
+                </div>
+
+                <h3>Preview:</h3>
+                <div class='fill-screen'>
+                    <img class='make-it-fit' ng-src={{app.pictureURI}} alt="" id="show-picture">
+                </div>
+                <h3>Type:</h3>
+                <md-radio-group ng-model="data.group1">
+                    <div layout="row" layout-xs="column"   layout-align-gt-xs="space-around center">
+                        <md-radio-button flex value="Threat" class="md-primary">Threat</md-radio-button>
+                        <md-radio-button flex value="Near miss">Near miss</md-radio-button>
+                        <md-radio-button flex value="Hazard">Hazard</md-radio-button>
+                    </div>
+                </md-radio-group>
+                <md-input-container class="stretch">
+                    <label>Description</label>
+                    <textarea ng-model="app.report.description" md-maxlength="150" rows="5"
+                              md-select-on-focus=""></textarea>
+                </md-input-container>
+                <md-button class="md-raised md-primary">Create</md-button>
+                <p id="error"></p>
+            </md-content>
+        </md-tab>
+        <md-tab label="Register">
+            <div layout="column" ng-cloak="" class="md-inline-form inputdemoBasicUsage">
+
+                <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding="">
+                    <div>
+                        <md-input-container>
+                            <label>Title</label>
+                            <input ng-model="user.title">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>Email</label>
+                            <input ng-model="user.email" type="email">
+                        </md-input-container>
+                    </div>
+                </md-content>
+
+                <md-content layout-padding="">
+                    <div>
+                        <form name="userForm">
+
+                            <div layout-gt-xs="row">
+                                <md-input-container class="md-block" flex-gt-xs="">
+                                    <label>Company (Disabled)</label>
+                                    <input ng-model="user.company" disabled="">
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label>Enter date</label>
+                                    <md-datepicker ng-model="user.submissionDate"></md-datepicker>
+                                </md-input-container>
+                            </div>
+
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex-gt-sm="">
+                                    <label>First name</label>
+                                    <input ng-model="user.firstName">
+                                </md-input-container>
+
+                                <md-input-container class="md-block" flex-gt-sm="">
+                                    <label>Long Last Name That Will Be Truncated And 3 Dots (Ellipsis) Will Appear At
+                                        The End</label>
+                                    <input ng-model="theMax">
+                                </md-input-container>
+                            </div>
+
+                            <md-input-container class="md-block">
+                                <label>Address</label>
+                                <input ng-model="user.address">
+                            </md-input-container>
+
+                            <md-input-container md-no-float="" class="md-block">
+                                <input ng-model="user.address2" placeholder="Address 2">
+                            </md-input-container>
+
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex-gt-sm="">
+                                    <label>City</label>
+                                    <input ng-model="user.city">
+                                </md-input-container>
+
+                                <md-input-container class="md-block" flex-gt-sm="">
+                                    <label>State</label>
+                                    <md-select ng-model="user.state">
+                                        <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+                                            {{state.abbrev}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container class="md-block" flex-gt-sm="">
+                                    <label>Postal Code</label>
+                                    <input name="postalCode" ng-model="user.postalCode" placeholder="12345" required=""
+                                           ng-pattern="/^[0-9]{5}$/" md-maxlength="5">
+
+                                    <div ng-messages="userForm.postalCode.$error" role="alert" multiple="">
+                                        <div ng-message="required" class="my-message">You must supply a postal code.
+                                        </div>
+                                        <div ng-message="pattern" class="my-message">That doesn't look like a valid
+                                            postal
+                                            code.
+                                        </div>
+                                        <div ng-message="md-maxlength" class="my-message">
+                                            Don't use the long version silly...we don't need to be that specific...
+                                        </div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                            <md-input-container class="md-block">
+                                <label>Biography</label>
+                                <textarea ng-model="user.biography" md-maxlength="150" rows="5"
+                                          md-select-on-focus=""></textarea>
+                            </md-input-container>
+
+
+                        </form>
+                    </div>
+                </md-content>
+
+            </div>
         </md-tab>
     </md-tabs>
 

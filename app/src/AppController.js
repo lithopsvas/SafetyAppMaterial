@@ -4,13 +4,13 @@
  * @param $mdSidenav
  * @constructor
  */
-function AppController(UsersDataService, $mdSidenav) {
+function AppController(UsersDataService, $mdSidenav, gpsService) {
     var self = this;
-
+    self.selectedIndex = 1;
     self.selected = null;
     self.users = [];
-    self.picData= null;
-    self.pictureURI = null;
+    self.picData = null;
+    self.pictureURI = "./assets/img/example.jpg";
     self.selectUser = selectUser;
     self.toggleList = toggleUsersList;
     self.changePic = changePic;
@@ -43,21 +43,20 @@ function AppController(UsersDataService, $mdSidenav) {
         self.selected = angular.isNumber(user) ? $scope.users[user] : user;
     }
 
+    function captureUserLocation() {
+        gpsService.getCurrentPosition().then((location)=> {
+            console.log("location");
+            console.log(location);
+        });
+    }
+
     function changePic(event) {
-        console.log("takePicture.onchange");
-        console.log("self.picData");
-        console.log(self.picData);
-        console.log("event");
-        console.log(event);
         // Get a reference to the taken picture or chosen file
         var files = event.target.files,
             file;
         if (files && files.length > 0) {
             file = files[0];
             try {
-                console.log("1");
-                console.log("file");
-                console.log(file);
                 // Create ObjectURL
                 var imgURL = window.URL.createObjectURL(file);
 
@@ -65,7 +64,7 @@ function AppController(UsersDataService, $mdSidenav) {
                 self.pictureURI = imgURL;
 
                 // Revoke ObjectURL
-               // URL.revokeObjectURL(imgURL);
+                // URL.revokeObjectURL(imgURL);
             }
             catch (e) {
                 try {
@@ -86,6 +85,7 @@ function AppController(UsersDataService, $mdSidenav) {
                     }
                 }
             }
+            captureUserLocation();
         }
     }
 }
