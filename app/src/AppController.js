@@ -6,22 +6,24 @@
  */
 function AppController(UsersDataService, $mdSidenav, gpsService) {
     var self = this;
-    self.selectedIndex = 1;
+    self.selectedIndex = 3;
     self.selected = null;
-    self.users = [];
+    self.reportsList = [];
     self.picData = null;
     self.pictureURI = "./assets/img/example.jpg";
     self.selectUser = selectUser;
     self.toggleList = toggleUsersList;
     self.changePic = changePic;
+    self.location = null;
+    self.error = 'no errors';
+    self.report = null;
 
     // Load all registered users
 
     UsersDataService
-        .loadAllUsers()
-        .then(function (users) {
-            self.users = [].concat(users);
-            self.selected = users[0];
+        .loadAllReports()
+        .then(function (reports) {
+            self.reportsList = [].concat(reports);
         });
 
     // *********************************
@@ -44,9 +46,10 @@ function AppController(UsersDataService, $mdSidenav, gpsService) {
     }
 
     function captureUserLocation() {
-        gpsService.getCurrentPosition().then((location)=> {
-            console.log("location");
-            console.log(location);
+        UsersDataService.getCurrentPosition().then((location)=> {
+            self.location = location;
+        }).catch((e)=> {
+            self.error = e.message;
         });
     }
 
@@ -68,7 +71,6 @@ function AppController(UsersDataService, $mdSidenav, gpsService) {
             }
             catch (e) {
                 try {
-                    console.log("2");
                     // Fallback if createObjectURL is not supported
                     var fileReader = new FileReader();
                     fileReader.onload = function (event) {
@@ -77,12 +79,7 @@ function AppController(UsersDataService, $mdSidenav, gpsService) {
                     fileReader.readAsDataURL(file);
                 }
                 catch (e) {
-                    console.log("3");
-                    //
-                    var error = document.querySelector("#error");
-                    if (error) {
-                        error.innerHTML = "Neither createObjectURL or FileReader are supported";
-                    }
+                    self.error = "Neither createObjectURL or FileReader are supported";
                 }
             }
             captureUserLocation();

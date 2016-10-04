@@ -8,9 +8,7 @@ import UserDetails from 'src/users/components/details/UserDetails';
 // Define the Angular 'users' module
 
 export default angular
-  .module("users", ['ngMaterial'])
-
-  .component(UsersList.name, UsersList.config)
-  .component(UserDetails.name, UserDetails.config)
-
-  .service("UsersDataService", UsersDataService);
+    .module("users", ['ngMaterial'])
+    .component(UsersList.name, UsersList.config)
+    .component(UserDetails.name, UserDetails.config)
+    .service("UsersDataService", UsersDataService);
